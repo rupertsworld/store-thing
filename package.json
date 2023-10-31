@@ -1,0 +1,12 @@
+{
+  "name": "store-thing",
+  "version": "0.1.1",
+  "description": "A simple storage layer leveraging events & local storage, with subscription.",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "author": "Rupert Manfredi <mail@ruperts.world>",
+  "license": "MIT",
+  "dependencies": {
+    "immer": "^10.0.3"
+  }
+}
