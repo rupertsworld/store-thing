@@ -1,12 +1,29 @@
 import { produce } from 'immer';
 
+const storagePrefix = 'store-';
+
 export class Store {
   constructor(id, initValue, options) {
     this.id = id;
-    if (this.get() && options.persist) return;
-    localStorage.setItem(this.id, JSON.stringify(initValue));
-    const event = new CustomEvent(`gs-${this.id}`);
-    dispatchEvent(event);
+    this.initValue = initValue;
+    this.key = `${storagePrefix}${id}`;
+
+    if (options && options.storage && options.storage === 'session') {
+      this.storage = sessionStorage;
+    } else if (options && options.storage && options.storage === 'local') {
+      this.storage = localStorage;
+    } else {
+      this.storage = localStorage;
+    }
+    if (!this.get()) {
+      this.storage.setItem(this.key, JSON.stringify(initValue));
+      const event = new CustomEvent(this.key);
+      dispatchEvent(event);
+    }
+  }
+
+  reset() {
+    this.storage.setItem(this.id, this.initValue);
   }
 
   update(mutation) {
@@ -15,18 +32,18 @@ export class Store {
     const newState = produce(baseState, (draft) => {
       mutation(draft);
     });
-    localStorage.setItem(this.id, JSON.stringify(newState));
-    const event = new CustomEvent(`gs-${this.id}`);
+    this.storage.setItem(this.key, JSON.stringify(newState));
+    const event = new CustomEvent(this.key);
     dispatchEvent(event);
   }
 
   get() {
-    const value = localStorage.getItem(this.id);
+    const value = this.storage.getItem(this.key);
     return value ? JSON.parse(value) : undefined;
   }
 
   subscribe(callback) {
-    addEventListener(`gs-${this.id}`, () => {
+    addEventListener(`${storagePrefix}${this.id}`, () => {
       const store = this.get();
       callback(store);
     });

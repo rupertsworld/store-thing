@@ -1,6 +1,6 @@
 {
   "name": "store-thing",
-  "version": "0.1.1",
+  "version": "0.1.4",
   "description": "A simple storage layer leveraging events & local storage, with subscription.",
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
