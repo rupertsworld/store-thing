@@ -1,12 +1,39 @@
 {
   "name": "store-thing",
-  "version": "0.1.5",
-  "description": "A simple storage layer leveraging events & local storage, with subscription.",
-  "main": "./src/index.js",
-  "types": "./src/index.d.ts",
+  "version": "0.2.0",
+  "description": "A simple reactive store backed by localStorage/sessionStorage, with Immer-powered immutable updates and event-based subscriptions.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:dist": "npm run build && RUN_DIST_TESTS=1 vitest run test/dist.integration.test.ts",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
   "author": "Rupert Manfredi <mail@ruperts.world>",
   "license": "MIT",
   "dependencies": {
+    "@rupertsworld/emitter": "^0.1.1",
     "immer": "^10.0.3"
+  },
+  "devDependencies": {
+    "jsdom": "^25.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0"
   }
 }
